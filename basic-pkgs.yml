@@ -1,0 +1,32 @@
+---
+- name: paquetes basicos
+  hosts: all
+  tasks:
+    - name: python3-apt
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python3-apt
+        - vim
+        - openssh-server
+        - nfs-common
+        - ntp
+    - name: copy vimrc to home
+      ansible.builtin.copy:
+        src: files/vimrc
+        dest: /home/emeteo/.vimrc
+        owner: emeteo
+        group: emeteo
+        mode: 0644
+- name: paquetes en laptops et vm
+  hosts: laptops vm
+  tasks:
+    - name: git
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git
+... 
+

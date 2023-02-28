@@ -1,0 +1,9 @@
+
+
+f2b_ntfy_user: "emeteo"
+# f2b_ntfy_passwd is in the vault
+f2b_ntfy_url: "https://emeteo.mooo.com/ntf/f2b"
+
+f2b_seafile_logpath: "/home/emeteo/docker/seafile/data/seafile/logs/seahub.log"
+f2b_vaultwarden_logpath: "/home/emeteo/docker/vaultwarden/data/vaultwarden.log"
+

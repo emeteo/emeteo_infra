@@ -1,0 +1,58 @@
+---
+- hosts: soundserver,pega
+  become: yes
+  tasks:
+    - name: add zabbix userparameter for fail2ban
+      tags:
+        - userparameter
+      copy:
+        src: files/zabbix/fail2ban.conf
+        dest: /etc/zabbix/zabbix_agentd.conf.d/fail2ban.conf
+
+    - name: add zabbix user to sudo fail2ban
+      tags:
+        - userparameter
+      copy:
+        content: | 
+          zabbix ALL=NOPASSWD:    /usr/bin/fail2ban-client status
+          zabbix ALL=NOPASSWD:    /usr/bin/fail2ban-client status *
+        dest: /etc/sudoers.d/zabbix_f2b
+        mode: 0440
+
+
+- hosts: rpi
+  become: yes
+  tasks:
+    - name: add zabbix userparameter for rpi
+      tags:
+        - userparameter
+      copy:
+        src: files/zabbix/rpi/raspberrypi.sh
+        dest: /usr/local/bin
+        mode: 0755
+
+
+    - name: add zabbix userparameter for rpi
+      tags:
+        - userparameter
+      copy:
+        src: files/zabbix/rpi/rpi.conf
+        dest: /etc/zabbix/zabbix_agentd.conf.d/rpi.conf
+
+    - name: add zabbix user to sudo raspberry
+      tags:
+        - userparameter
+      copy:
+        content: | 
+          zabbix ALL=NOPASSWD:    /usr/local/bin/raspberrypi.sh *
+        dest: /etc/sudoers.d/zabbix_rpi
+        mode: 0440
+
+    - name: restart zabbix-agent
+      tags:
+        - userparameter
+      service:
+        name: zabbix-agent
+        state: restarted
+    
+   

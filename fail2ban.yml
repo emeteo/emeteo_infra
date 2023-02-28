@@ -1,0 +1,38 @@
+---
+- name: Fail2ban
+  hosts: docker
+  vars_files:
+    - 'vars/vault.yaml'
+    - 'vars/fail2ban.yaml'
+  tasks:
+    - name: install fail2ban
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - fail2ban
+        - curl
+    - name: install notification sender.
+      ansible.builtin.template: 
+        src: files/fail2ban/ntfy-fail2ban.sh
+        dest: /usr/local/bin/
+        mode: 0755
+        owner: root
+        group: root
+        
+    - name : install custome filters
+      ansible.builtin.template:
+        src: files/fail2ban/{{ item }}
+        dest: /etc/fail2ban/{{ item }}
+        owner: root
+        group: root
+        mode: 0644
+      loop: 
+        - action.d/myactions.conf
+        - filter.d/seafile.conf
+        - filter.d/vaultwarden.conf
+        - jail.d/defaults-debian.local
+        - jail.d/seafile.local
+        - jail.d/vaultwarden.local
+
+  

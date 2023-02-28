@@ -1,0 +1,8 @@
+- hosts: dockers
+  vars:
+    docker_edition: 'ce'
+    docker_install_compose_plugin: true
+    docker_users:
+      - emeteo
+  roles: 
+    - geerlingguy.docker

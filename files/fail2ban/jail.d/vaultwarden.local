@@ -1,0 +1,10 @@
+[vaultwarden]
+enabled = true
+port = 80,443
+filter = vaultwarden
+banaction = %(banaction_allports)s
+logpath = {{ f2b_vaultwarden_logpath }}
+maxretry = 3
+bantime = 14400
+findtime = 14400
+action = myactions
