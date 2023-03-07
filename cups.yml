@@ -1,0 +1,27 @@
+---
+- name: print server
+  hosts: cups_server
+  tasks:
+    - name: install cups and drivers samsung
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - cups
+        - sane-utils
+        - printer-driver-splix
+
+    - name: copy cupsd.conf
+      ansible.builtin.copy:
+        src: files/cups/cupsd.conf
+        dest: /etc/cups/cupsd.conf
+        owner: root
+        group: root
+        mode: 0640
+    - name: make sane accesible
+      lineinfile:
+        path: /etc/sane.d/saned.conf
+        line: 192.168.1.1/24
+        state: present
+        backup: yes
+
