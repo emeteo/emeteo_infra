@@ -7,7 +7,7 @@
         - userparameter
       copy:
         src: files/zabbix/fail2ban.conf
-        dest: /etc/zabbix/zabbix_agentd.conf.d/fail2ban.conf
+        dest: /etc/zabbix/zabbix_agentd.d/fail2ban.conf
 
     - name: add zabbix user to sudo fail2ban
       tags:
@@ -18,7 +18,6 @@
           zabbix ALL=NOPASSWD:    /usr/bin/fail2ban-client status *
         dest: /etc/sudoers.d/zabbix_f2b
         mode: 0440
-
 
 - hosts: rpi
   become: yes
@@ -31,13 +30,12 @@
         dest: /usr/local/bin
         mode: 0755
 
-
     - name: add zabbix userparameter for rpi
       tags:
         - userparameter
       copy:
         src: files/zabbix/rpi/rpi.conf
-        dest: /etc/zabbix/zabbix_agentd.conf.d/rpi.conf
+        dest: /etc/zabbix/zabbix_agentd.d/rpi.conf
 
     - name: add zabbix user to sudo raspberry
       tags:
@@ -55,4 +53,49 @@
         name: zabbix-agent
         state: restarted
     
-   
+- hosts: all:!zabbix:!docker
+  vars_files:
+    - 'vars/zabbix.yaml'
+  tasks:
+    - name: install gpg
+      package:
+        name: gpg
+        state: present
+    - name: install zabbix gpg repository
+      ansible.builtin.apt_key:
+        id: FBABD5FB20255ECAB22EE194D13D58E479EA5ED4
+        url: https://repo.zabbix.com/zabbix-official-repo.key
+        keyring: /etc/apt/trusted.gpg.d/zabbix.gpg
+    - name: install repository of zabbix
+      ansible.builtin.apt_repository:
+        repo: "deb https://repo.zabbix.com/zabbix/{{ zabbix_version }}/debian {{ ansible_distribution_release }} main"
+        state: present
+      notify:
+        - apt-get update
+        - apt-get install
+    - name: Install zabbix-agent
+      package: 
+        name:  zabbix-agent
+        state: present
+
+    - name: copy config agent 
+      ansible.builtin.template:
+        src: files/zabbix/zabbix_agentd.conf.j2
+        dest: /etc/zabbix/zabbix_agentd.conf
+        owner: root
+        group: root
+
+  handlers: 
+    - name: apt-get update
+      package:
+        update_cache: true
+    - name: apt-get install
+      package:
+        name: zabbix-agent
+        state: latest
+
+
+
+    
+
+

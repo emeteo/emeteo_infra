@@ -2,7 +2,7 @@
 - name: paquetes basicos
   hosts: all
   tasks:
-    - name: python3-apt
+    - name: some basic packages
       package:
         name: "{{ item }}"
         state: present
@@ -12,6 +12,7 @@
         - openssh-server
         - nfs-common
         - ntp
+        - sudo
     - name: copy vimrc to home
       ansible.builtin.copy:
         src: files/vimrc
@@ -28,5 +29,16 @@
         state: present
       loop:
         - git
+- name: paquetes para VM (Proxmox)
+  hosts: vm
+  tasks:
+    - name: qemu-guest-agent
+      package:
+        name: qemu-guest-agent
+        state: present
+    - name: make sure qemu-guest-agent is started
+      ansible.builtin.service:
+        name: qemu-guest-agent
+        state: started
 ... 
 

@@ -1,4 +1,3 @@
-
 [rpi]
 pichon
 soundserver
@@ -10,21 +9,37 @@ pichon
 soundserver
 soundserver-2
 
+
 [laptops]
 autillo
 merlo
 azor
 
-[all:children]
-arm
-laptops
+[vm_desktops]
+Debian11Desktop
+test
 
-[vm]
+[desktops:children]
+laptops
+vm_desktops
+
+[infra_vm]
 zabbix
-debian11
 docker
 server
-nfs
+
+[vm:children]
+vm_desktops
+infra_vm
 
 [dockers]
 docker
+
+[cups_server]
+autillo
+merlo
+azor
+printer
+
+[lxc]
+printer

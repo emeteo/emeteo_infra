@@ -1,2 +1,3 @@
 zabbix_server: "zabbix.emeteo.local"
 zabbix_hostname: "{{ inventory_hostname }}.emeteo.local"
+zabbix_version: "6.2"

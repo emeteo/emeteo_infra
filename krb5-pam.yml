@@ -1,16 +1,9 @@
 ---
 
-- hosts: laptops
-  vars:
-    - krb5_def: laptops
-- hosts: all:!laptops
-  vars:
-    - krb5_def: default
-
 - name: enable krb5 client
-  hosts: all
+  hosts: all:!laptops
   vars_files:
-    - 'vars/krb5-{{ krb5_def }}.conf'
+    - 'vars/krb5-default.conf'
   tasks:
     - name: customice krb5.conf
       ansible.builtin.template:

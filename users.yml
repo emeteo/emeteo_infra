@@ -1,4 +1,22 @@
 ---
+- name: user ansible in all managed
+  hosts: desktops infra-vm arm lxc
+  tasks:
+    - name: user ansible
+      ansible.builtin.user:
+        name: ansible
+        comment: Ansible
+        group: ansible
+        shell: /bin/bash
+        non_unique: true
+        uid: 1007
+    - name: adding group ansible (1008)
+      ansible.builtin.group:
+        name: ansible
+        gid: 1008
+        state: present
+        non_unique: true
+
 - name: usuarios comunes
   hosts: all
   tasks:  
@@ -10,15 +28,9 @@
         uid: 1000
         shell: /bin/bash
         append: yes
-    - name: adding group ansible (1008)
-      ansible.builtin.group:
-        name: ansible
-        gid: 1008
-        state: present
-        non_unique: true
-- name: quitar usuarios de arm
+- name: quitar usuarios de desktops en servicios
   tags: clean
-  hosts: arm vm
+  hosts: all:!desktops
   tasks:
     - name: delete some users from arm
       ansible.builtin.user:
@@ -29,8 +41,21 @@
         - xiana
         - aroa
 
-- name: must be groups  laptops
-  hosts: laptops
+- name: must be groups  
+  hosts: all
+  tasks:
+    - name: media
+      ansible.builtin.group:
+        name: "{{ item.name }}"
+        gid: "{{ item.gid }}"
+        state: present
+        non_unique: true
+      loop:
+        - { name: 'emeteo', gid: 1000 }
+        - { name: 'ansible', gid: 1008 }
+
+- name: must be groups  desktops
+  hosts: desktops
   tasks:
     - name: media
       ansible.builtin.group:
@@ -46,16 +71,6 @@
         - { name: 'xiana', gid: 1007 }
         - { name: 'ansible', gid: 1008 }
 
-- name: user ansible in all managed
-  hosts: laptops vm arm
-  tasks:
-    - name: user ansible
-      ansible.builtin.user:
-        name: ansible
-        comment: Ansible
-        group: ansible
-        shell: /bin/bash
-        non_unique: true
 
 - name: must be users laptops
   hosts: laptops
