@@ -12,6 +12,7 @@
       loop:
         - fail2ban
         - curl
+        - iptables
     - name: install notification sender.
       ansible.builtin.template: 
         src: files/fail2ban/ntfy-fail2ban.sh
@@ -19,7 +20,9 @@
         mode: 0755
         owner: root
         group: root
-        
+      notify:
+        - restart fail2ban
+       
     - name : install custome filters
       ansible.builtin.template:
         src: files/fail2ban/{{ item }}
@@ -34,5 +37,20 @@
         - jail.d/defaults-debian.local
         - jail.d/seafile.local
         - jail.d/vaultwarden.local
+      notify:
+        - restart fail2ban
 
-  
+    - name: configure iptables chain
+      lineinfile:
+        path: /etc/fail2ban/action.d/iptables-common.conf
+        regexp: "^chain = INPUT"
+        line: chain = DOCKER-USER
+        backup: yes
+      notify:
+        - restart fail2ban
+ 
+  handlers:
+    - name: restart fail2ban
+      ansible.builtin.service:
+        name: fail2ban
+        state: restarted

@@ -16,7 +16,7 @@ merlo
 azor
 
 [vm_desktops]
-Debian11Desktop
+debian11desktop
 test
 
 [desktops:children]
