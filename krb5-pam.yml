@@ -14,6 +14,26 @@
         mode: 0644
     - name:       
       package:
-        name: libpam-krb5
+        name: "{{ item }}"
         state: present
+      loop:
+        - libpam-krb5
+        - krb5-user
+    - name: configure sshd_config
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#{{ item }}"
+        line:  "{{ item }} yes"
+        backup: yes
+      loop:
+        - "GSSAPIAuthentication"
+        - "GSSAPICleanupCredentials"
+      notify:
+        - restart sshd
+
+  handlers:
+    - name: restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
 
