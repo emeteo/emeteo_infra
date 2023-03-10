@@ -84,6 +84,8 @@
         dest: /etc/zabbix/zabbix_agentd.conf
         owner: root
         group: root
+      notify:
+        - restart zabbix-agent
 
   handlers: 
     - name: apt-get update
@@ -93,7 +95,11 @@
       package:
         name: zabbix-agent
         state: latest
-
+    - name: restart zabbix-agent
+      service:
+        name: zabbix-agent
+        state: restarted
+ 
 
 
     

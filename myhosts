@@ -27,6 +27,7 @@ vm_desktops
 zabbix
 docker
 server
+jellyfin
 
 [vm:children]
 vm_desktops

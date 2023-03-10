@@ -11,7 +11,7 @@
         - vim
         - openssh-server
         - nfs-common
-        - ntp
+          #        - ntp
         - sudo
     - name: copy vimrc to home
       ansible.builtin.copy:

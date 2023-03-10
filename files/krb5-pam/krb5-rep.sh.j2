@@ -1,0 +1,15 @@
+#!/bin/sh
+
+kdclist="{{ krb5_kdclist }}"
+
+tmp_file=$(mktemp)
+
+/usr/sbin/kdb5_util dump $tmp_file
+
+for kdc in $kdclist; do
+        /usr/sbin/kprop  -f $tmp_file $kdc > /dev/null 2>&1
+done
+
+rm ${tmp_file}
+
+exit 0
