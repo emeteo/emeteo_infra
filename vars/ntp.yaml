@@ -1,2 +1,2 @@
-ntp_server: [ pve.emeteo.local, pega.emeteo.local ]
+ntp_server: [ pve.emeteo.local ]
 ntp_pool : []

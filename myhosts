@@ -14,6 +14,7 @@ soundserver-2
 autillo
 merlo
 azor
+albatros
 
 [vm_desktops]
 debian11desktop
@@ -28,6 +29,7 @@ zabbix
 docker
 server
 jellyfin
+test
 
 [vm:children]
 vm_desktops
@@ -35,6 +37,7 @@ infra_vm
 
 [dockers]
 docker
+test
 
 [cups_server]
 autillo

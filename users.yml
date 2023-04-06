@@ -55,7 +55,7 @@
         - { name: 'ansible', gid: 1008 }
 
 - name: must be groups  desktops
-  hosts: desktops
+  hosts: desktops:server:docker
   tasks:
     - name: media
       ansible.builtin.group:

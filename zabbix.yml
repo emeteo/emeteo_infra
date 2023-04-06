@@ -1,5 +1,5 @@
 ---
-- hosts: soundserver,pega
+- hosts: soundserver:pega:server
   become: yes
   tasks:
     - name: add zabbix userparameter for fail2ban

@@ -40,5 +40,8 @@
       ansible.builtin.service:
         name: qemu-guest-agent
         state: started
+    - name: install watchdog
+      package:
+        state: present
 ... 
 

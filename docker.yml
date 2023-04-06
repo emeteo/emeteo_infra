@@ -6,3 +6,14 @@
       - emeteo
   roles: 
     - geerlingguy.docker
+- name: Configure system configs
+  hosts: docker
+  tasks: 
+    - name: configure /proc/sys values  
+      ansible.posix.sysctl:
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        state: present
+      loop:
+        - { name: fs.inotify.max_user_watches, value: 3276800 } 
+
