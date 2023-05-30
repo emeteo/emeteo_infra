@@ -13,6 +13,7 @@
         - nfs-common
           #        - ntp
         - sudo
+        - htop
     - name: copy vimrc to home
       ansible.builtin.copy:
         src: files/vimrc

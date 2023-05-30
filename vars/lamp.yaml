@@ -1,0 +1,7 @@
+---
+app_user: "www-data"
+http_host: "moodle.emeteo.duckdns.org"
+http_conf: "moodle.emeteo.duckdns.org.conf"
+http_port: "80"
+disable_default: true
+

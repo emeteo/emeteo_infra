@@ -1,0 +1,20 @@
+---
+- name: add the server rsyslog 
+  hosts: all:!logs
+  vars_files:
+    - 'vars/syslog.yaml'
+  tasks:
+    - name: generate remote syslog config 
+      copy:
+        content: | 
+          # log to remote server
+          *.* @{{ log_server }}
+        dest: /etc/rsyslog.d/99-remote.conf
+        mode: 0644
+      notify:
+        - restart rsyslog
+  handlers:
+    - name: restart rsyslog
+      ansible.builtin.service:
+        name: rsyslog
+        state: restarted

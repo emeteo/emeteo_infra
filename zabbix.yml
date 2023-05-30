@@ -69,6 +69,7 @@
     - name: install repository of zabbix
       ansible.builtin.apt_repository:
         repo: "deb https://repo.zabbix.com/zabbix/{{ zabbix_version }}/debian {{ ansible_distribution_release }} main"
+        filename: zabbix
         state: present
       notify:
         - apt-get update

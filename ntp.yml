@@ -1,6 +1,6 @@
 ---
 - name: install and configure NTP
-  hosts: all:!pega
+  hosts: all:!pega:!pve
   vars_files:
     - 'vars/ntp.yaml'
   tasks:

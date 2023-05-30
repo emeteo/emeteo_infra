@@ -1,6 +1,6 @@
 ---
 - name: user ansible in all managed
-  hosts: desktops infra-vm arm lxc
+  hosts: desktops infra arm lxc
   tasks:
     - name: user ansible
       ansible.builtin.user:

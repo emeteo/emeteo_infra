@@ -24,12 +24,22 @@ test
 laptops
 vm_desktops
 
+[servers]
+pve
+
 [infra_vm]
 zabbix
 docker
 server
-jellyfin
+moodle
+logs
 test
+test2
+
+
+[infra:children]
+infra_vm
+servers
 
 [vm:children]
 vm_desktops
@@ -47,3 +57,8 @@ printer
 
 [lxc]
 printer
+ansible
+
+
+[lamp]
+moodle
