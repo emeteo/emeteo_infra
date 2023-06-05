@@ -26,11 +26,15 @@ vm_desktops
 
 [servers]
 pve
+pve-2
+
 
 [infra_vm]
 zabbix
 docker
+docker-2
 server
+server-2
 moodle
 logs
 test
@@ -47,6 +51,7 @@ infra_vm
 
 [dockers]
 docker
+docker-2
 test
 
 [cups_server]

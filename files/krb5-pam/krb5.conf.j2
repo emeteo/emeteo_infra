@@ -26,7 +26,9 @@
 
 [realms]
 	{{ krb5_realm }} = {
-		kdc = {{ krb5_kdc }}
+{% for item in krb5_kdc %}
+		kdc = {{ item }}
+{% endfor %}
 		admin_server = {{ krb5_admin }}
 	}
 	ATHENA.MIT.EDU = {
