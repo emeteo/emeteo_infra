@@ -1,6 +1,6 @@
 ---
 - name: install and configure NTP
-  hosts: all:!pega:!pve
+  hosts: all:!pega:!servers
   vars_files:
     - 'vars/ntp.yaml'
   tasks:
@@ -11,10 +11,11 @@
     - name: Copy the ntp.conf template file
       ansible.builtin.template:
         src: files/ntp/ntp.conf.j2
-        dest: /etc/ntp.conf
+        dest: /etc/ntpsec/ntp.conf
         mode: 0644
         owner: root
         group: root
+        backup: yes
       notify:
         - restart ntp
   handlers:

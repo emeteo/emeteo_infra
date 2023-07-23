@@ -53,14 +53,14 @@
         name: zabbix-agent
         state: restarted
     
-- hosts: all:!zabbix:!docker
+- hosts: all:!docker
   vars_files:
     - 'vars/zabbix.yaml'
   tasks:
     - name: install gpg
       package:
         name: gpg
-        state: present
+        state: latest
     - name: install zabbix gpg repository
       ansible.builtin.apt_key:
         id: FBABD5FB20255ECAB22EE194D13D58E479EA5ED4
@@ -77,7 +77,7 @@
     - name: Install zabbix-agent
       package: 
         name:  zabbix-agent
-        state: present
+        state: latest
 
     - name: copy config agent 
       ansible.builtin.template:
@@ -85,6 +85,7 @@
         dest: /etc/zabbix/zabbix_agentd.conf
         owner: root
         group: root
+        backup: yes
       notify:
         - restart zabbix-agent
 

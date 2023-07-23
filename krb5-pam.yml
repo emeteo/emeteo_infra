@@ -25,6 +25,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: yes
     - name:       
       package:
         name: "{{ item }}"
@@ -35,12 +36,13 @@
     - name: configure sshd_config
       lineinfile:
         path: /etc/ssh/sshd_config
-        regexp: "^#{{ item }}"
-        line:  "{{ item }} yes"
+        regexp: "^(#){{ item.key }}"
+        line:  "{{ item.key }} {{ item.value }}"
+        state: present
         backup: yes
       loop:
-        - "GSSAPIAuthentication"
-        - "GSSAPICleanupCredentials"
+        - { key: "GSSAPIAuthentication", value: "yes" }
+        - { key: "GSSAPICleanupCredentials", value: "yes" }
       notify:
         - restart sshd
 

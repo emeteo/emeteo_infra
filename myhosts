@@ -27,6 +27,7 @@ vm_desktops
 [servers]
 pve
 pve-2
+pbs
 
 
 [infra_vm]
@@ -39,6 +40,7 @@ moodle
 logs
 test
 test2
+debian12cloudinit
 
 
 [infra:children]
