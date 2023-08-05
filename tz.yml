@@ -1,0 +1,11 @@
+---
+- name: configure time zone
+  hosts: all
+  tasks:
+    - name: 'Set timezone to Europe/Madrid'
+      timezone:
+        name: 'Europe/Madrid'
+    - name:
+      debug:
+        msg="{{ lookup('pipe','date "+%Y-%m-%d %H:%M:%S"') }}"
+
