@@ -27,17 +27,21 @@ vm_desktops
 [servers]
 pve
 pve-2
-pbs
+pve-3
 
 
 [infra_vm]
 zabbix
 docker
 docker-2
+docker-3
 server
 server-2
+nfs
 moodle
+netbox
 logs
+pbs
 test
 test2
 debian12cloudinit
@@ -54,7 +58,9 @@ infra_vm
 [dockers]
 docker
 docker-2
-test
+docker-3
+debian12cloudinit
+nfs
 
 [cups_server]
 autillo

@@ -4,6 +4,13 @@
   vars_files:
     - 'vars/syslog.yaml'
   tasks:
+    - name: apt-get update
+      package:
+        update_cache: true
+    - name: install sryslog
+      package:
+        name: "rsyslog"
+        state: latest
     - name: generate remote syslog config 
       copy:
         content: | 

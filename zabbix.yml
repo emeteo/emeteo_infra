@@ -53,7 +53,7 @@
         name: zabbix-agent
         state: restarted
     
-- hosts: all:!docker
+- hosts: all
   vars_files:
     - 'vars/zabbix.yaml'
   tasks:

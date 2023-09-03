@@ -1,0 +1,8 @@
+---
+
+netbox_db_name: netbox
+netbox_db_user: netbox
+netbox_allowed_hosts: " 'netbox.emeteo.local','192.168.1.61' "
+netbox_path: "/opt/netbox/"
+netbox_servername: "netbox.emeteo.local"
+

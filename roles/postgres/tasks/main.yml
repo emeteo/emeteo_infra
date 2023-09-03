@@ -1,0 +1,41 @@
+---
+- name: Install postgresql
+  apt: name={{ item }} update_cache=yes state=latest force_apt_get=yes
+  loop: ['postgresql', 'python3-psycopg2']
+
+- name: "Create app database"
+  postgresql_db:
+    state: present
+    name: "{{ db_name }}"
+  become: true
+  become_user: postgres
+
+- name: "Create db user"
+  postgresql_user:
+    state: present
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+  become: true
+  become_user: postgres
+
+- name: "Grant user {{ db_user }} to {{ db_name }}"
+  postgresql_privs:
+    type: database
+    database: "{{ db_name }}"
+    roles: "{{ db_user }}"
+    grant_option: no
+    privs: all
+  become: true
+  become_user: postgres
+
+- name: "Grant create schema public to {{ db_name }}"
+  postgresql_privs:
+    database: "{{ db_name }}"
+    privs: CREATE
+    type: schema
+    objs: public
+    role: "{{ db_user }}"
+  become: true
+  become_user: postgres
+
+

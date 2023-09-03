@@ -1,0 +1,129 @@
+- hosts: netbox
+  vars_files:
+    - vars/netbox.yaml
+    - vars/vault.yaml
+    
+  vars:
+    - db_user: "{{ netbox_db_user }}"
+    - db_name: "{{ netbox_db_name }}"
+    - db_password: "{{ netbox_db_password }}"
+  roles: 
+    - postgres
+    - redis
+
+  tasks:
+    - name: "install required packages"
+      package:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - python3
+        - python3-pip
+        - python3-venv
+        - python3-dev
+        - build-essential 
+        - libxml2-dev
+        - libxslt1-dev
+        - libffi-dev
+        - libpq-dev
+        - libssl-dev
+        - zlib1g-dev
+        - git
+        - nginx
+          
+    - name: "create directory {{ netbox_path }}"
+      ansible.builtin.file:
+        path: "{{ netbox_path }}"
+        state: directory
+        recurse: yes
+    - name: "checkout netbox software"
+      ansible.builtin.git:
+        repo: 'https://github.com/netbox-community/netbox.git'
+        dest: "{{ netbox_path }}" 
+        version: "v3.6.0"
+    - name: "adding netbox system user"
+      ansible.builtin.user:
+        name: netbox
+        system: true
+        state: present
+
+    - name: Permissions to netbox dir
+      ansible.builtin.file:
+        path: "{{ netbox_path }}/netbox/{{ item }}"
+        owner: netbox
+      loop:
+        - media
+        - reports
+        - scripts
+
+    - name: generating configuration.py
+      ansible.builtin.template:
+        src: files/netbox/configuration.py.j2
+        dest: "{{ netbox_path }}/netbox/netbox/configuration.py"
+        owner: root
+        group: root
+        mode: 644
+  
+
+    - name: copy gnuicorn.py
+      ansible.builtin.copy:
+        src: "/opt/netbox/contrib/gunicorn.py"
+        dest: "/opt/netbox/gunicorn.py"
+        remote_src: yes
+
+    - name: install systemd services
+      ansible.builtin.copy:
+        src: "/opt/netbox/contrib/{{ item }}"
+        dest: "/etc/systemd/system/{{ item }}"
+        remote_src: yes
+      loop:
+        - netbox-housekeeping.service  
+        - netbox-rq.service  
+        - netbox.service
+      notify:
+        - reload-systemd
+        - enable-netbox
+    - name: start netbox services
+      ansible.builtin.systemd:
+        name: "{{ item }}.service"
+        enabled: true
+      loop:
+        - netbox
+        - netbox-rq
+    - name: generate nginx site
+      ansible.builtin.template:
+        src: files/netbox/nginx.conf.j2
+        dest: "/etc/nginx/sites-available/netbox"
+        owner: root
+        group: root
+        mode: 644
+
+    - name: remove default config nginx
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: enable netbox nginx site
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/netbox
+        dest: /etc/nginx/sites-enabled/netbox
+        state: link
+      notify:
+        - restart-nginx
+
+  handlers:
+    - name: reload-systemd
+      ansible.builtin.systemd:
+        daemon_reload: true
+    - name: enable-netbox
+      ansible.builtin.systemd:
+        name: "{{ item }}.service"
+        enabled: true
+      loop:
+        - netbox
+        - netbox-rq
+    - name: restart-nginx
+      service:
+        name: nginx
+        state: restarted
+
