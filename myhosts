@@ -42,6 +42,7 @@ moodle
 netbox
 logs
 pbs
+ldap
 test
 test2
 debian12cloudinit
